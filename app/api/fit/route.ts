@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { location, muscles, duration } = body;
+  const { location, muscles, days } = body;
 
-  const muscleText = muscles.includes("full")
-    ? "full body"
-    : muscles.join(", ");
+  const muscleText = muscles.includes("full") ? "full body" : muscles.join(", ");
+
+  const splitSuggestion =
+    days === 2 ? "Full Body x2" :
+    days === 3 ? "Push/Pull/Legs" :
+    days === 4 ? "Upper/Lower Split" :
+    "Bro Split (chest, back, shoulder, arms, legs)";
 
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -18,11 +22,11 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-5",
-        max_tokens: 2048,
+        max_tokens: 4096,
         messages: [
           {
             role: "user",
-            content: `Create a ${duration} minute ${location} workout plan targeting: ${muscleText}. Respond ONLY with valid JSON: {"workout": {"title": "Workout name", "duration": ${duration}, "exercises": [{"name": "Exercise name", "muscle": "Target muscle", "sets": 3, "reps": "10-12", "instruction": "How to do it in one sentence."}]}}`,
+            content: "Create a " + days + "-day per week " + location + " workout plan using " + splitSuggestion + " split, targeting: " + muscleText + ". Create exactly " + days + " workout days and " + (7 - days) + " rest days spread across the week. Respond ONLY with valid JSON: {\"plan\": {\"split\": \"split name\", \"days\": [{\"day\": \"Monday\", \"type\": \"workout\", \"focus\": \"muscle focus\", \"exercises\": [{\"name\": \"Exercise name\", \"muscle\": \"target muscle\", \"sets\": 3, \"reps\": \"10-12\", \"instruction\": \"one sentence how to\"}]}, {\"day\": \"Tuesday\", \"type\": \"rest\", \"focus\": \"Rest & Recovery\", \"exercises\": []}]}}",
           },
         ],
       }),
