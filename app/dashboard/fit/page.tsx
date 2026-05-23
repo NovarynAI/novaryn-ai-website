@@ -200,7 +200,7 @@ export default function FitPage() {
                     rel="noopener noreferrer"
                     className="text-xs text-green-400/60 hover:text-green-400 transition"
                   >
-                    Nasil yapilir?
+                    How to do it?
                   </a>
                 </div>
               ))}
