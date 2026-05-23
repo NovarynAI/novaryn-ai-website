@@ -38,35 +38,6 @@ const muscleGroups = [
 
 const dayOptions = [2, 3, 4, 5];
 
-function ExerciseCard({ ex }: { ex: Exercise }) {
-  const youtubeUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " how to exercise");
-
-  return (
-    <div className="bg-[#111] border border-white/5 rounded-2xl px-6 py-5">
-      <div className="flex items-start justify-between mb-2">
-        <div>
-          <p className="font-semibold text-white">{ex.name}</p>
-          <p className="text-xs text-green-400 mt-0.5">{ex.muscle}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm font-bold text-white">{ex.sets} set</p>
-          <p className="text-xs text-white/40">{ex.reps} tekrar</p>
-        </div>
-      </div>
-      <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
-      
-        href={youtubeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 text-xs text-red-400/70 hover:text-red-400 transition border border-red-400/20 hover:border-red-400/40 rounded-full px-3 py-1.5"
-      >
-        <span>▶</span>
-        <span>Nasil yapilir?</span>
-      </a>
-    </div>
-  );
-}
-
 export default function FitPage() {
   const [location, setLocation] = useState<"home" | "gym" | null>(null);
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
@@ -249,7 +220,21 @@ export default function FitPage() {
                   </div>
                 ) : (
                   plan.days[activeDay].exercises.map((ex, i) => (
-                    <ExerciseCard key={i} ex={ex} />
+                    <div key={i} className="bg-[#111] border border-white/5 rounded-2xl px-6 py-5">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="font-semibold text-white">{ex.name}</p>
+                          <p className="text-xs text-green-400 mt-0.5">{ex.muscle}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-bold text-white">{ex.sets} set</p>
+                          <p className="text-xs text-white/40">{ex.reps} tekrar</p>
+                        </div>
+                      </div>
+                      <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
+                      
+                        href={"https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " how to exercise")} target="_blank" rel="noopener noreferrer" className="text-xs text-red-400">Nasil yapilir?</a>
+                    </div>
                   ))
                 )}
               </div>
