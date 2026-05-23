@@ -27,7 +27,7 @@ const modules = [
     description: "Kisisel antrenman plani.",
     color: "from-green-400 to-emerald-500",
     textColor: "text-green-400",
-    soon: true,
+    soon: false,
   },
   {
     href: "/dashboard/mind",
@@ -36,7 +36,7 @@ const modules = [
     description: "Gunluk meditasyon ve zihinsel netlik.",
     color: "from-purple-400 to-pink-500",
     textColor: "text-purple-400",
-    soon: true,
+    soon: false,
   },
   {
     href: "/dashboard/write",
