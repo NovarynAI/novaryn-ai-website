@@ -8,6 +8,7 @@ type Exercise = {
   sets: number;
   reps: string;
   instruction: string;
+  gifUrl?: string;
 };
 
 type Day = {
@@ -231,7 +232,10 @@ export default function FitPage() {
                           <p className="text-xs text-white/40">{ex.reps} tekrar</p>
                         </div>
                       </div>
-                      <p className="text-white/40 text-sm">{ex.instruction}</p>
+                      <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
+                      {ex.gifUrl && (
+                        <img src={ex.gifUrl} alt={ex.name} className="w-full rounded-xl mt-2 opacity-90" />
+                      )}
                     </div>
                   ))
                 )}
