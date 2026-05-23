@@ -12,14 +12,19 @@ export async function GET(request: Request) {
           "X-RapidAPI-Key": process.env.RAPIDAPI_KEY || "",
           "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
         },
+        cache: "no-store",
       }
     );
-    const data = await response.json();
+
+    const text = await response.text();
+    console.log("ExerciseDB response:", text.slice(0, 200));
+
+    const data = JSON.parse(text);
     if (data && data[0] && data[0].gifUrl) {
       return NextResponse.json({ gifUrl: data[0].gifUrl });
     }
-    return NextResponse.json({ gifUrl: "" });
-  } catch {
-    return NextResponse.json({ gifUrl: "" });
+    return NextResponse.json({ gifUrl: "", debug: text.slice(0, 100) });
+  } catch (error) {
+    return NextResponse.json({ gifUrl: "", error: String(error) });
   }
 }
