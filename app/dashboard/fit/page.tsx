@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 type Exercise = {
@@ -38,6 +38,38 @@ const muscleGroups = [
 ];
 
 const dayOptions = [2, 3, 4, 5];
+
+function ExerciseCard({ ex }: { ex: Exercise }) {
+  const [gifUrl, setGifUrl] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/gif?name=" + encodeURIComponent(ex.name))
+      .then((r) => r.json())
+      .then((d) => { if (d.gifUrl) setGifUrl(d.gifUrl); })
+      .catch(() => {});
+  }, [ex.name]);
+
+  return (
+    <div className="bg-[#111] border border-white/5 rounded-2xl px-6 py-5">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <p className="font-semibold text-white">{ex.name}</p>
+          <p className="text-xs text-green-400 mt-0.5">{ex.muscle}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-bold text-white">{ex.sets} set</p>
+          <p className="text-xs text-white/40">{ex.reps} tekrar</p>
+        </div>
+      </div>
+      <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
+      {gifUrl ? (
+        <img src={gifUrl} alt={ex.name} className="w-full rounded-xl mt-2 opacity-90" />
+      ) : (
+        <div className="w-full h-32 rounded-xl bg-white/5 animate-pulse mt-2" />
+      )}
+    </div>
+  );
+}
 
 export default function FitPage() {
   const [location, setLocation] = useState<"home" | "gym" | null>(null);
@@ -221,22 +253,7 @@ export default function FitPage() {
                   </div>
                 ) : (
                   plan.days[activeDay].exercises.map((ex, i) => (
-                    <div key={i} className="bg-[#111] border border-white/5 rounded-2xl px-6 py-5">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <p className="font-semibold text-white">{ex.name}</p>
-                          <p className="text-xs text-green-400 mt-0.5">{ex.muscle}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-bold text-white">{ex.sets} set</p>
-                          <p className="text-xs text-white/40">{ex.reps} tekrar</p>
-                        </div>
-                      </div>
-                      <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
-                      {ex.gifUrl && (
-                        <img src={ex.gifUrl} alt={ex.name} className="w-full rounded-xl mt-2 opacity-90" />
-                      )}
-                    </div>
+                    <ExerciseCard key={i} ex={ex} />
                   ))
                 )}
               </div>
