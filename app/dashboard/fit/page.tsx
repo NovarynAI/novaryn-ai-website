@@ -38,13 +38,6 @@ const muscleGroups = [
 
 const dayOptions = [2, 3, 4, 5];
 
-const splitNames: Record<number, string> = {
-  2: "Full Body x2",
-  3: "Push / Pull / Legs",
-  4: "Upper / Lower Split",
-  5: "Bro Split",
-};
-
 export default function FitPage() {
   const [location, setLocation] = useState<"home" | "gym" | null>(null);
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
@@ -120,7 +113,6 @@ export default function FitPage() {
                   >
                     <p className={"text-2xl font-bold " + (days === d ? "text-green-400" : "")}>{d}</p>
                     <p className="text-xs text-white/30 mt-1">gun</p>
-                    )}
                   </button>
                 ))}
               </div>
@@ -204,7 +196,7 @@ export default function FitPage() {
                   className={"rounded-xl px-3 py-2 border transition text-center min-w-[80px] " + (activeDay === i ? (d.type === "rest" ? "border-white/30 bg-white/5" : "border-green-400 bg-green-400/10") : "border-white/10 bg-[#111] hover:border-white/20")}
                 >
                   <p className="text-xs font-semibold">{d.day.slice(0, 3)}</p>
-                  <p className={"text-xs mt-0.5 " + (d.type === "rest" ? "text-white/30" : "text-green-400")}>{d.type === "rest" ? "Dinlenme" : "Antrenman"}</p>
+                  <p className={"text-xs mt-0.5 " + (d.type === "rest" ? "text-white/30" : "text-green-400")}>{d.type === "rest" ? "Din" : "Ant"}</p>
                 </button>
               ))}
             </div>
@@ -217,7 +209,7 @@ export default function FitPage() {
                     <p className="text-green-400 text-sm">{plan.days[activeDay].focus}</p>
                   </div>
                   {plan.days[activeDay].type === "rest" && (
-                    <span className="text-xs text-white/30 border border-white/10 rounded-full px-3 py-1">Dinlenme Gunu</span>
+                    <span className="text-xs text-white/30 border border-white/10 rounded-full px-3 py-1">Dinlenme</span>
                   )}
                 </div>
 
