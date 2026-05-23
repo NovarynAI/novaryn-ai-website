@@ -133,7 +133,7 @@ export default function FitPage() {
                       key={m.id}
                       onClick={() => toggleMuscle(m.id)}
                       
-                      className={"rounded-xl px-3 py-2 border transition text-left text-sm " + (selectedMuscles.includes(m.id) ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20 text-white/60") + (isFull ? " opacity-25 cursor-not-allowed" : "")}
+                      className={"rounded-xl px-3 py-2 border transition text-left text-sm " + (selectedMuscles.includes(m.id) ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20 text-white/60")}
                     >
                       {m.label}
                     </button>
