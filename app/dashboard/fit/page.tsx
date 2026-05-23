@@ -39,9 +39,15 @@ export default function FitPage() {
   const [loading, setLoading] = useState(false);
   const [workout, setWorkout] = useState<Workout | null>(null);
 
+  function toggleLocation(loc: "home" | "gym") {
+    setLocation((prev) => (prev === loc ? null : loc));
+  }
+
   function toggleMuscle(id: string) {
     if (id === "full") {
-      setSelectedMuscles(["full"]);
+      setSelectedMuscles((prev) =>
+        prev.includes("full") ? [] : ["full"]
+      );
       return;
     }
     setSelectedMuscles((prev) => {
@@ -72,6 +78,7 @@ export default function FitPage() {
   }
 
   const isReady = location && selectedMuscles.length > 0 && duration;
+  const isFull = selectedMuscles.includes("full");
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -94,10 +101,13 @@ export default function FitPage() {
             <div>
               <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Nerede antrenman yapiyorsun?</p>
               <div className="grid grid-cols-2 gap-3">
-                {[{ id: "home", label: "🏠 Ev", desc: "Ekipmansiz" }, { id: "gym", label: "🏋️ Spor Salonu", desc: "Ekipmanli" }].map((l) => (
+                {[
+                  { id: "home" as const, label: "🏠 Ev", desc: "Ekipmansiz" },
+                  { id: "gym" as const, label: "🏋️ Spor Salonu", desc: "Ekipmanli" },
+                ].map((l) => (
                   <button
                     key={l.id}
-                    onClick={() => setLocation(l.id as "home" | "gym")}
+                    onClick={() => toggleLocation(l.id)}
                     className={`rounded-2xl px-4 py-4 border transition text-left ${location === l.id ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20"}`}
                   >
                     <p className="font-semibold">{l.label}</p>
@@ -112,7 +122,7 @@ export default function FitPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => toggleMuscle("full")}
-                  className={`rounded-2xl px-4 py-4 border transition text-left min-w-[120px] ${selectedMuscles.includes("full") ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20"}`}
+                  className={`rounded-2xl px-4 py-4 border transition text-left min-w-[110px] ${isFull ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20"}`}
                 >
                   <p className="text-2xl mb-1">🏃</p>
                   <p className="font-semibold text-sm">Tum Vucut</p>
@@ -122,8 +132,12 @@ export default function FitPage() {
                     <button
                       key={m.id}
                       onClick={() => toggleMuscle(m.id)}
-                      disabled={selectedMuscles.includes("full")}
-                      className={`rounded-xl px-3 py-2 border transition text-left text-sm ${selectedMuscles.includes(m.id) ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20 text-white/60"} disabled:opacity-30 disabled:cursor-not-allowed`}
+                      disabled={isFull}
+                      className={`rounded-xl px-3 py-2 border transition text-left text-sm ${
+                        selectedMuscles.includes(m.id)
+                          ? "border-green-400 bg-green-400/10 text-green-400"
+                          : "border-white/10 bg-[#111] hover:border-white/20 text-white/60"
+                      } disabled:opacity-25 disabled:cursor-not-allowed`}
                     >
                       {m.label}
                     </button>
@@ -138,7 +152,7 @@ export default function FitPage() {
                 {durations.map((d) => (
                   <button
                     key={d}
-                    onClick={() => setDuration(d)}
+                    onClick={() => setDuration((prev) => (prev === d ? null : d))}
                     className={`rounded-2xl py-4 border transition font-bold ${duration === d ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20"}`}
                   >
                     {d}<span className="text-xs font-normal ml-1">dk</span>
@@ -187,7 +201,15 @@ export default function FitPage() {
                       <p className="text-xs text-white/40">{ex.reps} tekrar</p>
                     </div>
                   </div>
-                  <p className="text-white/40 text-sm">{ex.instruction}</p>
+                  <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
+                  
+                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + " exercise how to")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-green-400/60 hover:text-green-400 transition"
+                  >
+                    Nasil yapilir? →
+                  </a>
                 </div>
               ))}
             </div>
