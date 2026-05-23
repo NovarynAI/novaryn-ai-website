@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 type Exercise = {
@@ -8,7 +8,6 @@ type Exercise = {
   sets: number;
   reps: string;
   instruction: string;
-  gifUrl?: string;
 };
 
 type Day = {
@@ -40,14 +39,7 @@ const muscleGroups = [
 const dayOptions = [2, 3, 4, 5];
 
 function ExerciseCard({ ex }: { ex: Exercise }) {
-  const [gifUrl, setGifUrl] = useState<string>("");
-
-  useEffect(() => {
-    fetch("/api/gif?name=" + encodeURIComponent(ex.name))
-      .then((r) => r.json())
-      .then((d) => { if (d.gifUrl) setGifUrl(d.gifUrl); })
-      .catch(() => {});
-  }, [ex.name]);
+  const youtubeUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " how to exercise");
 
   return (
     <div className="bg-[#111] border border-white/5 rounded-2xl px-6 py-5">
@@ -62,11 +54,15 @@ function ExerciseCard({ ex }: { ex: Exercise }) {
         </div>
       </div>
       <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
-      {gifUrl ? (
-        <img src={gifUrl} alt={ex.name} className="w-full rounded-xl mt-2 opacity-90" />
-      ) : (
-        <div className="w-full h-32 rounded-xl bg-white/5 animate-pulse mt-2" />
-      )}
+      
+        href={youtubeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-xs text-red-400/70 hover:text-red-400 transition border border-red-400/20 hover:border-red-400/40 rounded-full px-3 py-1.5"
+      >
+        <span>▶</span>
+        <span>Nasil yapilir?</span>
+      </a>
     </div>
   );
 }
