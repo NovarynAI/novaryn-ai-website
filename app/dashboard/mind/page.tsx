@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 
 const categories = [
@@ -50,6 +50,7 @@ type SessionStat = {
 };
 
 const DAILY_LIMIT = 50;
+const LEADERBOARD_THRESHOLD = 50;
 const TIME_LIMIT = 20;
 
 export default function MindPage() {
@@ -123,6 +124,15 @@ export default function MindPage() {
       },
     }));
     setDailyCount((prev) => prev + 1);
+  }
+
+  function handleExit() {
+    clearTimer();
+    setSelectedSub(null);
+    setQuestion(null);
+    setShowResult(false);
+    setTimesUp(false);
+    setSelectedAnswer(null);
   }
 
   function getOptionStyle(option: string) {
@@ -204,20 +214,30 @@ export default function MindPage() {
             <div className="space-y-3">
               {selectedCategory.subcategories.map((sub) => {
                 const stat = stats[sub];
+                const solved = stat?.total || 0;
+                const remaining = Math.max(0, LEADERBOARD_THRESHOLD - solved);
                 return (
                   <button
                     key={sub}
                     onClick={() => { setSelectedSub(sub); getQuestion(selectedCategory.label, sub); }}
-                    className="w-full bg-[#111] border border-white/10 rounded-2xl px-6 py-4 text-left hover:border-purple-400/40 transition flex items-center justify-between"
+                    className="w-full bg-[#111] border border-white/10 rounded-2xl px-6 py-4 text-left hover:border-purple-400/40 transition"
                   >
-                    <p className="font-semibold">{sub}</p>
-                    {stat ? (
-                      <div className="text-right">
-                        <p className="text-sm font-bold text-purple-400">{Math.round((stat.correct / stat.total) * 100)}%</p>
-                        <p className="text-xs text-white/30">{stat.total} soru</p>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-white/20">Basla</p>
+                    <div className="flex items-center justify-between">
+                      <p className="font-semibold">{sub}</p>
+                      {stat ? (
+                        <div className="text-right">
+                          <p className="text-sm font-bold text-purple-400">{Math.round((stat.correct / stat.total) * 100)}%</p>
+                          <p className="text-xs text-white/30">{stat.total} soru</p>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-white/20">Basla</p>
+                      )}
+                    </div>
+                    {stat && remaining > 0 && (
+                      <p className="text-xs text-orange-400/70 mt-2">Puan tablosuna girmek icin {remaining} soru kaldi</p>
+                    )}
+                    {stat && remaining === 0 && (
+                      <p className="text-xs text-green-400/70 mt-2">Puan tablosundasin!</p>
                     )}
                   </button>
                 );
@@ -229,7 +249,7 @@ export default function MindPage() {
         {selectedSub && (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
-              <button onClick={() => { setSelectedSub(null); setQuestion(null); clearTimer(); }} className="text-xs text-white/30 hover:text-white transition">
+              <button onClick={handleExit} className="text-xs text-white/30 hover:text-white transition">
                 Geri
               </button>
               <div className="flex items-center gap-4">
@@ -318,12 +338,20 @@ export default function MindPage() {
                             <p className="text-white/40 text-xs">{question.explanation}</p>
                           </div>
                         )}
-                        <button
-                          onClick={() => getQuestion(selectedCategory?.label || "", selectedSub)}
-                          className="w-full bg-gradient-to-r from-purple-400 to-indigo-500 text-white py-4 rounded-2xl font-bold text-sm hover:scale-[1.02] transition-transform"
-                        >
-                          Sonraki Soru
-                        </button>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            onClick={handleExit}
+                            className="border border-white/10 text-white/40 py-4 rounded-2xl text-sm hover:text-white hover:border-white/20 transition"
+                          >
+                            Bitir
+                          </button>
+                          <button
+                            onClick={() => getQuestion(selectedCategory?.label || "", selectedSub)}
+                            className="bg-gradient-to-r from-purple-400 to-indigo-500 text-white py-4 rounded-2xl font-bold text-sm hover:scale-[1.02] transition-transform"
+                          >
+                            Sonraki Soru
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
