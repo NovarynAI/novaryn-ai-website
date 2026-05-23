@@ -199,13 +199,6 @@ export default function FitPage() {
                   </div>
                   <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
                   
-                    href={getYoutubeUrl(ex.name)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-green-400/60 hover:text-green-400 transition"
-                  >
-                    Watch
-                  </a>
                 </div>
               ))}
             </div>
