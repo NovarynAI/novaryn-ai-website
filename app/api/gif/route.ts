@@ -16,14 +16,10 @@ export async function GET(request: Request) {
       }
     );
 
-    const text = await response.text();
-    console.log("ExerciseDB response:", text.slice(0, 200));
-
-    const data = JSON.parse(text);
-    if (data && data[0] && data[0].gifUrl) {
-      return NextResponse.json({ gifUrl: data[0].gifUrl });
-    }
-    return NextResponse.json({ gifUrl: "", debug: text.slice(0, 100) });
+    const data = await response.json();
+    const first = Array.isArray(data) ? data[0] : null;
+    const gifUrl = first ? (first.gifUrl || first.gif_url || "") : "";
+    return NextResponse.json({ gifUrl, keys: first ? Object.keys(first) : [] });
   } catch (error) {
     return NextResponse.json({ gifUrl: "", error: String(error) });
   }
