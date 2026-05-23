@@ -17,17 +17,17 @@ type Workout = {
 };
 
 const muscleGroups = [
-  { id: "chest_upper", label: "Üst Göğüs" },
-  { id: "chest_lower", label: "Alt Göğüs" },
-  { id: "chest_full", label: "Tüm Göğüs" },
-  { id: "back", label: "Sırt" },
+  { id: "chest_upper", label: "Ust Gogus" },
+  { id: "chest_lower", label: "Alt Gogus" },
+  { id: "chest_full", label: "Tum Gogus" },
+  { id: "back", label: "Sirt" },
   { id: "shoulder", label: "Omuz" },
   { id: "bicep", label: "Bicep" },
   { id: "tricep", label: "Tricep" },
-  { id: "abs", label: "Karın" },
-  { id: "quad", label: "Ön Bacak" },
+  { id: "abs", label: "Karin" },
+  { id: "quad", label: "On Bacak" },
   { id: "hamstring", label: "Arka Bacak" },
-  { id: "glute", label: "Kalça" },
+  { id: "glute", label: "Kalca" },
 ];
 
 const durations = [15, 30, 45, 60];
@@ -45,16 +45,12 @@ export default function FitPage() {
 
   function toggleMuscle(id: string) {
     if (id === "full") {
-      setSelectedMuscles((prev) =>
-        prev.includes("full") ? [] : ["full"]
-      );
+      setSelectedMuscles((prev) => (prev.includes("full") ? [] : ["full"]));
       return;
     }
     setSelectedMuscles((prev) => {
       const without = prev.filter((m) => m !== "full");
-      if (without.includes(id)) {
-        return without.filter((m) => m !== id);
-      }
+      if (without.includes(id)) return without.filter((m) => m !== id);
       return [...without, id];
     });
   }
@@ -102,13 +98,13 @@ export default function FitPage() {
               <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Nerede antrenman yapiyorsun?</p>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { id: "home" as const, label: "🏠 Ev", desc: "Ekipmansiz" },
-                  { id: "gym" as const, label: "🏋️ Spor Salonu", desc: "Ekipmanli" },
+                  { id: "home" as const, label: "Ev", desc: "Ekipmansiz" },
+                  { id: "gym" as const, label: "Spor Salonu", desc: "Ekipmanli" },
                 ].map((l) => (
                   <button
                     key={l.id}
                     onClick={() => toggleLocation(l.id)}
-                    className={`rounded-2xl px-4 py-4 border transition text-left ${location === l.id ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20"}`}
+                    className={"rounded-2xl px-4 py-4 border transition text-left " + (location === l.id ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20")}
                   >
                     <p className="font-semibold">{l.label}</p>
                     <p className="text-xs text-white/30 mt-1">{l.desc}</p>
@@ -118,11 +114,11 @@ export default function FitPage() {
             </div>
 
             <div>
-              <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Hangi bölgeleri calistiracaksin?</p>
+              <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Hangi bolgeleri calistiracaksin?</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => toggleMuscle("full")}
-                  className={`rounded-2xl px-4 py-4 border transition text-left min-w-[110px] ${isFull ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20"}`}
+                  className={"rounded-2xl px-4 py-4 border transition text-left min-w-[110px] " + (isFull ? "border-green-400 bg-green-400/10" : "border-white/10 bg-[#111] hover:border-white/20")}
                 >
                   <p className="text-2xl mb-1">🏃</p>
                   <p className="font-semibold text-sm">Tum Vucut</p>
@@ -133,11 +129,7 @@ export default function FitPage() {
                       key={m.id}
                       onClick={() => toggleMuscle(m.id)}
                       disabled={isFull}
-                      className={`rounded-xl px-3 py-2 border transition text-left text-sm ${
-                        selectedMuscles.includes(m.id)
-                          ? "border-green-400 bg-green-400/10 text-green-400"
-                          : "border-white/10 bg-[#111] hover:border-white/20 text-white/60"
-                      } disabled:opacity-25 disabled:cursor-not-allowed`}
+                      className={"rounded-xl px-3 py-2 border transition text-left text-sm " + (selectedMuscles.includes(m.id) ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20 text-white/60") + (isFull ? " opacity-25 cursor-not-allowed" : "")}
                     >
                       {m.label}
                     </button>
@@ -153,7 +145,7 @@ export default function FitPage() {
                   <button
                     key={d}
                     onClick={() => setDuration((prev) => (prev === d ? null : d))}
-                    className={`rounded-2xl py-4 border transition font-bold ${duration === d ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20"}`}
+                    className={"rounded-2xl py-4 border transition font-bold " + (duration === d ? "border-green-400 bg-green-400/10 text-green-400" : "border-white/10 bg-[#111] hover:border-white/20")}
                   >
                     {d}<span className="text-xs font-normal ml-1">dk</span>
                   </button>
@@ -166,7 +158,7 @@ export default function FitPage() {
               disabled={!isReady || loading}
               className="w-full bg-gradient-to-r from-green-400 to-emerald-500 text-black py-4 rounded-2xl font-bold text-base hover:scale-[1.02] transition-transform disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              {loading ? "Plan hazirlaniyor..." : "Antrenman planini olustur →"}
+              {loading ? "Plan hazirlaniyor..." : "Antrenman planini olustur"}
             </button>
           </div>
         )}
@@ -203,12 +195,12 @@ export default function FitPage() {
                   </div>
                   <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
                   
-                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + " exercise how to")}`}
+                    href={"https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " exercise how to")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-green-400/60 hover:text-green-400 transition"
                   >
-                    Nasil yapilir? &rarr;
+                    Nasil yapilir?
                   </a>
                 </div>
               ))}
@@ -218,7 +210,7 @@ export default function FitPage() {
               onClick={() => { setWorkout(null); setSelectedMuscles([]); setDuration(null); setLocation(null); }}
               className="w-full border border-white/10 rounded-2xl py-4 text-sm text-white/40 hover:text-white hover:border-white/20 transition mt-4"
             >
-              Yeni plan olustur →
+              Yeni plan olustur
             </button>
           </div>
         )}
