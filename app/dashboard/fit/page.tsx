@@ -120,8 +120,6 @@ export default function FitPage() {
                   >
                     <p className={"text-2xl font-bold " + (days === d ? "text-green-400" : "")}>{d}</p>
                     <p className="text-xs text-white/30 mt-1">gun</p>
-                    {days === d && (
-                      <p className="text-xs text-green-400/70 mt-2 px-1">{splitNames[d]}</p>
                     )}
                   </button>
                 ))}
