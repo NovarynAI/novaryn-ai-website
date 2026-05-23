@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const level = searchParams.get("level") || "intermediate";
+
+  const levelPrompts: Record<string, string> = {
+    beginner: "very basic A1-A2 level English words that a complete beginner would learn first, like common nouns, basic verbs, simple adjectives",
+    intermediate: "B1-B2 level English words useful for everyday conversation, work, and travel",
+    advanced: "C1-C2 level advanced English words, academic or professional vocabulary, sophisticated terms",
+  };
+
+  const levelDesc = levelPrompts[level] || levelPrompts.intermediate;
+
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -15,7 +26,7 @@ export async function GET() {
         messages: [
           {
             role: "user",
-            content: "Generate 3 English words for Turkish speakers. Respond ONLY with JSON: {\"words\": [{\"word\": \"WORD\", \"meaning\": \"anlam\", \"sentence\": \"Sentence.\", \"sentenceTr\": \"Cumle.\"}]}",
+            content: `Generate exactly 3 ${levelDesc} English words for Turkish speakers. For each word provide the English word, its Turkish meaning, a natural example sentence in English, and the Turkish translation of that sentence. Respond ONLY with valid JSON, no extra text: {"words": [{"word": "WORD", "meaning": "Turkish meaning", "sentence": "Example sentence.", "sentenceTr": "Turkish translation."}]}`,
           },
         ],
       }),

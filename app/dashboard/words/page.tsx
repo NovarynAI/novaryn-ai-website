@@ -10,20 +10,28 @@ type Word = {
   status?: "known" | "review" | null;
 };
 
+type Level = "beginner" | "intermediate" | "advanced";
+
+const levels = [
+  { id: "beginner" as Level, label: "Baslangic", emoji: "🟢", desc: "Temel kelimeler" },
+  { id: "intermediate" as Level, label: "Orta", emoji: "🟡", desc: "Gunluk konusma" },
+  { id: "advanced" as Level, label: "Ileri", emoji: "🔴", desc: "Akademik / profesyonel" },
+];
+
 export default function WordsPage() {
+  const [level, setLevel] = useState<Level | null>(null);
   const [words, setWords] = useState<Word[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showSentence, setShowSentence] = useState(false);
   const [allDone, setAllDone] = useState(false);
 
-  async function getWords() {
+  async function getWords(selectedLevel: Level) {
+    setLevel(selectedLevel);
     setLoading(true);
     setAllDone(false);
     setCurrentIndex(0);
-    setShowSentence(false);
     try {
-      const res = await fetch("/api/words");
+      const res = await fetch(`/api/words?level=${selectedLevel}`);
       const data = await res.json();
       setWords(data.words || []);
     } catch {
@@ -47,7 +55,6 @@ export default function WordsPage() {
   }
 
   function goNext(updated: Word[]) {
-    setShowSentence(false);
     if (currentIndex + 1 >= updated.length) {
       setAllDone(true);
     } else {
@@ -73,10 +80,23 @@ export default function WordsPage() {
         </h1>
         <p className="text-white/30 text-sm tracking-wide mb-12">Her gun 3 yeni kelime.</p>
 
-        {words.length === 0 && !loading && (
-          <button onClick={getWords} className="bg-gradient-to-r from-blue-400 to-cyan-500 text-black px-10 py-4 rounded-full font-bold text-base hover:scale-105 transition-transform">
-            Bugünün kelimelerini getir →
-          </button>
+        {!level && !loading && (
+          <div className="space-y-4">
+            <p className="text-white/50 text-sm mb-6">Seviyeni sec:</p>
+            {levels.map((l) => (
+              <button
+                key={l.id}
+                onClick={() => getWords(l.id)}
+                className="w-full bg-[#111] border border-white/10 rounded-2xl px-6 py-4 flex items-center gap-4 hover:border-white/30 transition text-left"
+              >
+                <span className="text-2xl">{l.emoji}</span>
+                <div>
+                  <p className="font-semibold">{l.label}</p>
+                  <p className="text-xs text-white/30">{l.desc}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         )}
 
         {loading && (
@@ -88,7 +108,7 @@ export default function WordsPage() {
 
         {!loading && words.length > 0 && !allDone && current && (
           <div className="space-y-6">
-            <div className="flex justify-center gap-2 mb-8">
+            <div className="flex justify-center gap-2 mb-4">
               {words.map((w, i) => (
                 <div key={i} className={`w-3 h-3 rounded-full transition-all ${i === currentIndex ? "bg-blue-400 scale-125" : w.status === "known" ? "bg-green-400" : w.status === "review" ? "bg-orange-400" : "bg-white/20"}`} />
               ))}
@@ -98,22 +118,15 @@ export default function WordsPage() {
               <div className="bg-[#111] rounded-2xl px-8 py-8">
                 <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Kelime {currentIndex + 1} / {words.length}</p>
                 <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-4">{current.word}</h2>
-                <div className="inline-block bg-white/5 rounded-full px-4 py-2">
+                <div className="inline-block bg-white/5 rounded-full px-4 py-2 mb-6">
                   <p className="text-white/70 text-lg">{current.meaning}</p>
+                </div>
+                <div className="border-t border-white/5 pt-6 text-left space-y-2">
+                  <p className="text-white/80 text-base italic">"{current.sentence}"</p>
+                  <p className="text-white/40 text-sm">"{current.sentenceTr}"</p>
                 </div>
               </div>
             </div>
-
-            {!showSentence ? (
-              <button onClick={() => setShowSentence(true)} className="w-full border border-white/10 rounded-2xl py-4 text-sm text-white/40 hover:text-white hover:border-white/20 transition">
-                Ornek cumleyi goster →
-              </button>
-            ) : (
-              <div className="bg-[#111] border border-white/5 rounded-2xl px-8 py-6 text-left space-y-3">
-                <p className="text-white/90 text-base italic">"{current.sentence}"</p>
-                <p className="text-white/40 text-sm">"{current.sentenceTr}"</p>
-              </div>
-            )}
 
             <div className="grid grid-cols-2 gap-4 pt-2">
               <button onClick={handleReview} className="border border-orange-400/30 text-orange-400 rounded-2xl py-4 text-sm font-semibold hover:bg-orange-400/10 transition">
@@ -142,8 +155,8 @@ export default function WordsPage() {
                 </div>
               </div>
             </div>
-            <button onClick={getWords} className="w-full border border-white/10 rounded-2xl py-4 text-sm text-white/40 hover:text-white hover:border-white/20 transition">
-              3 kelime daha →
+            <button onClick={() => { setLevel(null); setWords([]); setAllDone(false); }} className="w-full border border-white/10 rounded-2xl py-4 text-sm text-white/40 hover:text-white hover:border-white/20 transition">
+              Tekrar oyna →
             </button>
           </div>
         )}
