@@ -18,8 +18,11 @@ export async function GET(request: Request) {
 
     const data = await response.json();
     const first = Array.isArray(data) ? data[0] : null;
-    const gifUrl = first ? (first.gifUrl || first.gif_url || "") : "";
-    return NextResponse.json({ gifUrl, keys: first ? Object.keys(first) : [] });
+    if (first && first.id) {
+      const gifUrl = "https://v2.exercisedb.io/image/" + first.id;
+      return NextResponse.json({ gifUrl });
+    }
+    return NextResponse.json({ gifUrl: "" });
   } catch (error) {
     return NextResponse.json({ gifUrl: "", error: String(error) });
   }
