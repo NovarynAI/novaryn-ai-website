@@ -177,11 +177,30 @@ export default function MindPage() {
             <button onClick={() => setSelectedCategory(null)} className="text-xs text-white/30 hover:text-white transition mb-2">
               Geri
             </button>
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <p className="text-5xl mb-3">{selectedCategory.emoji}</p>
               <h2 className="text-3xl font-bold">{selectedCategory.label}</h2>
-              <p className="text-white/40 text-sm mt-3 leading-relaxed">Kategorinde <span className="text-purple-400 font-semibold">50 soru</span> coz,<br />puan tablosunda aktifles!</p>
             </div>
+
+            <div className="bg-[#111] border border-purple-400/20 rounded-2xl px-6 py-5 space-y-4 mb-6">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">📅</span>
+                <p className="text-white/80 text-sm">Her gun max. <span className="text-purple-400 font-bold">50 soru</span> hakkin var!</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🏆</span>
+                <p className="text-white/80 text-sm">Kategorinde <span className="text-purple-400 font-bold">50 soru</span> cozmen sonra puan tablosunda gorunursun!</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">⏱️</span>
+                <p className="text-white/80 text-sm">Her soru icin <span className="text-purple-400 font-bold">20 saniyen</span> var!</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">😌</span>
+                <p className="text-white/80 text-sm">Endiseme! Yanittan sonra bir sonraki soruya <span className="text-purple-400 font-bold">sen gecirmeden</span> gecmez!</p>
+              </div>
+            </div>
+
             <div className="space-y-3">
               {selectedCategory.subcategories.map((sub) => {
                 const stat = stats[sub];

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         messages: [
           {
             role: "user",
-            content: "Generate a challenging trivia question in Turkish about " + subcategory + " (subcategory of " + category + "). The question must be difficult, not basic. Provide exactly 4 options where only 1 is correct. Respond ONLY with valid JSON: {\"question\": \"question text\", \"options\": [\"A) option\", \"B) option\", \"C) option\", \"D) option\"], \"correct\": \"A\" or \"B\" or \"C\" or \"D\", \"explanation\": \"brief explanation in Turkish\"}",
+            content: "Generate a fun trivia question in Turkish about " + subcategory + " (subcategory of " + category + "). Target audience: Gen Z, young adults. Rules: focus on last 20 years, popular culture, viral moments, famous records, shocking facts, legendary players/artists/events. Make it interesting and fun, not boring textbook history. Medium difficulty - not too easy, not too obscure. Vary the questions each time. Respond ONLY with valid JSON: {\"question\": \"question text\", \"options\": [\"A) option\", \"B) option\", \"C) option\", \"D) option\"], \"correct\": \"A\" or \"B\" or \"C\" or \"D\", \"explanation\": \"brief fun explanation in Turkish, max 1 sentence\"}",
           },
         ],
       }),
