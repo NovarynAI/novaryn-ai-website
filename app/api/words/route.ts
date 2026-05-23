@@ -15,28 +15,21 @@ export async function GET() {
         messages: [
           {
             role: "user",
-            content: `Generate exactly 3 English words for Turkish speakers to learn. For each word provide:
-- The English word
-- Turkish meaning
-- An example sentence in English
-- Turkish translation of that sentence
+            content: "Generate 3 English words for Turkish speakers. Respond ONLY with JSON: {\"words\": [{\"word\": \"WORD\", \"meaning\": \"anlam\", \"sentence\": \"Sentence.\", \"sentenceTr\": \"Cumle.\"}]}",
+          },
+        ],
+      }),
+    });
 
-Respond in this exact JSON format, nothing else:
-{
-  "words": [
-    {
-      "word": "ENGLISH_WORD",
-      "meaning": "Türkçe anlam",
-      "sentence": "Example sentence in English.",
-      "sentenceTr": "Cümlenin Türkçesi."
+    const data = await response.json();
+    if (!data.content || !data.content[0]) {
+      return NextResponse.json({ error: "API error" }, { status: 500 });
     }
-  ]
-}`,
-          },
-          },
-ceTr": "Cümlenin Türkçesi."
-sh ash ash ash ash ash ash ash ash ash ash asent sh ash ash ash ash ash ash   rsh ashNesh ash ash ash ash ash ash ash ash ash ash asent sh ash ash ash ash ash as tsh ash ash ashtent[0].sh ash ash anst csh ash ash ash ash ash ash ash ash ash ashimsh ash ash ash ash ash ash ash ash ash ash asent sh asNextResponse.json(parsed);
+    const text = data.content[0].text;
+    const clean = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+    return NextResponse.json(parsed);
   } catch (error) {
-    return NextResponse.json({ error:     return NextResponse.json({ errtus: 500 });
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
