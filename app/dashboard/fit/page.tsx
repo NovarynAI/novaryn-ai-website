@@ -32,6 +32,10 @@ const muscleGroups = [
 
 const durations = [15, 30, 45, 60];
 
+function getYoutubeUrl(name: string): string {
+  return "https://www.youtube.com/results?search_query=" + encodeURIComponent(name + " exercise how to");
+}
+
 export default function FitPage() {
   const [location, setLocation] = useState<"home" | "gym" | null>(null);
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
@@ -195,12 +199,12 @@ export default function FitPage() {
                   </div>
                   <p className="text-white/40 text-sm mb-3">{ex.instruction}</p>
                   
-                    href={"https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " exercise how to")}
+                    href={getYoutubeUrl(ex.name)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-green-400/60 hover:text-green-400 transition"
                   >
-                    How to do it?
+                    Watch
                   </a>
                 </div>
               ))}
